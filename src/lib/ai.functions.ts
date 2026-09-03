@@ -17,12 +17,12 @@ ${BASE_GUARDRAILS}
 
 TASK: Write a professional workplace email.
 
-Recipient: ${d.recipient || "the recipient"}
-Tone: ${d.tone}
-Desired length: ${d.length}
+Recipient: ${d["recipient"] || "the recipient"}
+Tone: ${d["tone"]}
+Desired length: ${d["length"]}
 Purpose / key points from the user:
 """
-${d.brief}
+${d["brief"]}
 """
 
 Structure your answer exactly as:
@@ -37,10 +37,10 @@ ${BASE_GUARDRAILS}
 
 TASK: Summarize raw meeting notes or a transcript.
 
-Meeting context: ${d.context || "not provided"}
+Meeting context: ${d["context"] || "not provided"}
 Raw notes:
 """
-${d.notes}
+${d["notes"]}
 """
 
 Return Markdown with these sections, in this order, omitting none:
@@ -58,13 +58,13 @@ Bullets of anything unresolved or ambiguous in the notes.`,
   planner: (d: Record<string, string>) => `
 ${BASE_GUARDRAILS}
 
-TASK: Build a realistic ${d.horizon} work schedule.
+TASK: Build a realistic ${d["horizon"]} work schedule.
 
-Working hours: ${d.hours}
-Fixed commitments: ${d.fixed || "none given"}
+Working hours: ${d["hours"]}
+Fixed commitments: ${d["fixed"] || "none given"}
 Tasks and goals from the user:
 """
-${d.tasks}
+${d["tasks"]}
 """
 
 Method: classify every task by urgency and importance (Eisenhower), then time-block it.
@@ -83,11 +83,11 @@ You have no live web access, so rely only on the supplied material and general k
 
 TASK: Research briefing for a workplace audience.
 
-Topic / question: ${d.topic}
-Audience: ${d.audience}
+Topic / question: ${d["topic"]}
+Audience: ${d["audience"]}
 Source material supplied by the user (may be empty):
 """
-${d.source || "none supplied"}
+${d["source"] || "none supplied"}
 """
 
 Return Markdown with:
