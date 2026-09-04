@@ -8,13 +8,13 @@ import { useGenerate } from "@/lib/use-generate";
 export const Route = createFileRoute("/notes")({
   head: () => ({
     meta: [
-      { title: "Meeting Notes Summarizer — Nexa" },
+      { title: "Meeting Notes Summarizer — WorkWithMe.ai" },
       {
         name: "description",
         content:
           "Turn long meeting notes or transcripts into a summary with decisions, owned action items and deadlines.",
       },
-      { property: "og:title", content: "Meeting Notes Summarizer — Nexa" },
+      { property: "og:title", content: "Meeting Notes Summarizer — WorkWithMe.ai" },
       {
         property: "og:description",
         content: "Extract decisions, action items and deadlines from raw meeting notes instantly.",

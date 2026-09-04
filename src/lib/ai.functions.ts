@@ -101,10 +101,41 @@ What this means for the audience specifically.
 Numbered, action-oriented, each with a first step.
 ## Verify before relying on this
 Bullets naming the specific claims, figures or dates that should be checked against a primary source.`,
+  resume: (d: Record<string, string>) => `
+${BASE_GUARDRAILS}
+
+TASK: Review a resume against a target job description and score its ATS keyword alignment.
+
+Candidate name: ${d["name"] || "not provided"}
+Target job title: ${d["title"] || "not provided"}
+Professional summary:
+"""
+${d["summary"]}
+"""
+Core competencies: ${d["skills"] || "not provided"}
+Target job description:
+"""
+${d["jobDesc"] || "none supplied"}
+"""
+
+Return Markdown with:
+## ATS match score
+A single line in the exact form "**Score: NN/100**" followed by one sentence of justification. Base the score only on evidence in the supplied text.
+## Matched keywords
+Bullets of requirements from the job description that the resume already evidences.
+## Missing or weak keywords
+Bullets of requirements not evidenced, each with a short note on how to evidence it honestly.
+## Rewritten professional summary
+An improved 2-3 sentence summary using only facts present in the supplied resume. Never invent employers, metrics, dates or certifications.
+## Suggested competency list
+A single comma-separated line.
+## Verify before using
+Bullets naming anything the candidate must confirm is factually true.`,
 } as const;
 
 const GenerateInput = z.object({
-  tool: z.enum(["email", "notes", "planner", "research"]),
+  tool: z.enum(["email", "notes", "planner", "research", "resume"]),
+
   fields: z.record(z.string()),
 });
 
@@ -129,7 +160,7 @@ export const generateWorkplaceContent = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const prompt = PROMPTS[data.tool](data.fields);
     const text = await runPrompt(
-      "You are Nexa, an AI workplace productivity assistant. Follow the task format exactly.",
+      "You are WorkWithMe.ai, an AI workplace productivity assistant. Follow the task format exactly.",
       prompt,
     );
     return { text };
@@ -159,7 +190,7 @@ export const chatWithAssistant = createServerFn({ method: "POST" })
       model: gateway(WORKPLACE_MODEL),
       system: `${BASE_GUARDRAILS}
 
-You are Nexa, an AI workplace assistant. You help with drafting, planning, summarizing and thinking through work problems.
+You are WorkWithMe.ai, an AI workplace assistant. You help with drafting, planning, summarizing and thinking through work problems.
 Answer in Markdown. Keep replies tight — bullets over paragraphs when listing.
 If a request needs judgement a human must own (HR decisions, legal, medical, financial advice), give useful structure but tell the user to confirm with the responsible person.`,
       messages: data.messages,

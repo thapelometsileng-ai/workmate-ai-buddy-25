@@ -77,13 +77,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Nexa — AI Workplace Productivity Assistant" },
+      { title: "WorkWithMe.ai — AI Workplace Productivity Assistant" },
       {
         name: "description",
         content:
           "AI assistants for emails, meeting notes, task planning, research and workplace chat — in one dashboard.",
       },
-      { property: "og:title", content: "Nexa — AI Workplace Productivity Assistant" },
+      { property: "og:title", content: "WorkWithMe.ai — AI Workplace Productivity Assistant" },
       {
         property: "og:description",
         content:

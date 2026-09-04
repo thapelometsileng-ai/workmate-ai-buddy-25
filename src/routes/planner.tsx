@@ -8,13 +8,13 @@ import { useGenerate } from "@/lib/use-generate";
 export const Route = createFileRoute("/planner")({
   head: () => ({
     meta: [
-      { title: "AI Task Planner — Nexa" },
+      { title: "AI Task Planner — WorkWithMe.ai" },
       {
         name: "description",
         content:
           "Turn a messy task list into a prioritised, time-blocked daily or weekly schedule with realistic buffers.",
       },
-      { property: "og:title", content: "AI Task Planner — Nexa" },
+      { property: "og:title", content: "AI Task Planner — WorkWithMe.ai" },
       {
         property: "og:description",
         content: "Prioritise tasks and time-block a realistic day or week with AI.",
@@ -34,7 +34,7 @@ function PlannerPage() {
   return (
     <AppShell
       title="AI Task Planner"
-      description="Dump your tasks. Nexa ranks them by urgency and importance, then time-blocks a schedule you can actually keep."
+      description="Dump your tasks. WorkWithMe.ai ranks them by urgency and importance, then time-blocks a schedule you can actually keep."
     >
       <div className="grid gap-4 lg:grid-cols-5">
         <div className="panel space-y-4 p-4 sm:p-5 lg:col-span-2">

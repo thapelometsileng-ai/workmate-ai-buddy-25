@@ -2,7 +2,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useCallback, useRef, useState } from "react";
 import { generateWorkplaceContent } from "./ai.functions";
 
-type Tool = "email" | "notes" | "planner" | "research";
+type Tool = "email" | "notes" | "planner" | "research" | "resume";
 
 export function useGenerate(tool: Tool) {
   const run = useServerFn(generateWorkplaceContent);

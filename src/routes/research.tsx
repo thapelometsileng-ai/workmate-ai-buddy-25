@@ -8,13 +8,13 @@ import { useGenerate } from "@/lib/use-generate";
 export const Route = createFileRoute("/research")({
   head: () => ({
     meta: [
-      { title: "AI Research Assistant — Nexa" },
+      { title: "AI Research Assistant — WorkWithMe.ai" },
       {
         name: "description",
         content:
           "Summarize a topic or pasted article into an executive brief with key findings, implications and recommendations.",
       },
-      { property: "og:title", content: "AI Research Assistant — Nexa" },
+      { property: "og:title", content: "AI Research Assistant — WorkWithMe.ai" },
       {
         property: "og:description",
         content: "Executive research briefs with findings, insights, recommendations and what to verify.",
@@ -35,7 +35,7 @@ function ResearchPage() {
   return (
     <AppShell
       title="AI Research Assistant"
-      description="Ask a question or paste an article. Nexa returns a briefing — and tells you which claims to verify."
+      description="Ask a question or paste an article. WorkWithMe.ai returns a briefing — and tells you which claims to verify."
     >
       <div className="grid gap-4 lg:grid-cols-5">
         <div className="panel space-y-4 p-4 sm:p-5 lg:col-span-2">
