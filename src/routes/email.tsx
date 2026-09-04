@@ -8,13 +8,13 @@ import { useGenerate } from "@/lib/use-generate";
 export const Route = createFileRoute("/email")({
   head: () => ({
     meta: [
-      { title: "Smart Email Generator — Nexa" },
+      { title: "Smart Email Generator — WorkWithMe.ai" },
       {
         name: "description",
         content:
           "Generate professional workplace emails in a formal, friendly, persuasive, apologetic, direct or diplomatic tone.",
       },
-      { property: "og:title", content: "Smart Email Generator — Nexa" },
+      { property: "og:title", content: "Smart Email Generator — WorkWithMe.ai" },
       {
         property: "og:description",
         content: "Draft clear, tone-matched workplace emails in seconds, then edit before sending.",
