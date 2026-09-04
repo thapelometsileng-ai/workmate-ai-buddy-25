@@ -1,12 +1,10 @@
-# Roadmap — AI Workplace Productivity Assistant
+# WorkWithMe.ai — roadmap
 
-- [x] Design system (Space Grotesk + DM Sans, ink/teal SaaS palette)
-- [x] Dashboard shell: sidebar nav (desktop) + drawer (mobile), responsible AI disclaimer
-- [x] Lovable AI gateway wiring (server functions)
-- [x] Smart Email Generator (tones)
-- [x] Meeting Notes Summarizer (action items, decisions, deadlines)
-- [x] AI Task Planner / Scheduler
+- [x] Dark slate + emerald design system
+- [x] Sidebar shell, ethics footer banner, floating AI chat widget
+- [x] AI Resume Builder + live preview + AI ATS analysis
+- [x] Smart Email Generator
+- [x] Meeting Notes Summarizer
+- [x] AI Task Planner
 - [x] AI Research Assistant
-- [x] AI Chatbot Interface
-- [x] Editable outputs + copy/regenerate
-- [x] README for GitHub submission
+- [x] Ethics & Privacy page
