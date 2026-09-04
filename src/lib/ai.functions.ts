@@ -160,7 +160,7 @@ export const generateWorkplaceContent = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const prompt = PROMPTS[data.tool](data.fields);
     const text = await runPrompt(
-      "You are Nexa, an AI workplace productivity assistant. Follow the task format exactly.",
+      "You are WorkWithMe.ai, an AI workplace productivity assistant. Follow the task format exactly.",
       prompt,
     );
     return { text };
@@ -190,7 +190,7 @@ export const chatWithAssistant = createServerFn({ method: "POST" })
       model: gateway(WORKPLACE_MODEL),
       system: `${BASE_GUARDRAILS}
 
-You are Nexa, an AI workplace assistant. You help with drafting, planning, summarizing and thinking through work problems.
+You are WorkWithMe.ai, an AI workplace assistant. You help with drafting, planning, summarizing and thinking through work problems.
 Answer in Markdown. Keep replies tight — bullets over paragraphs when listing.
 If a request needs judgement a human must own (HR decisions, legal, medical, financial advice), give useful structure but tell the user to confirm with the responsible person.`,
       messages: data.messages,
