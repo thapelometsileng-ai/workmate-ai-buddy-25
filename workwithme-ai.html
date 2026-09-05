@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WorkWithMe.ai - AI Workplace Productivity Suite</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0b1220; }
+    .panel { background: #111a2e; border: 1px solid #1e2a45; border-radius: 0.75rem; }
+    .brand { color: #34d399; }
+    .btn-brand { background: #10b981; color: #04120c; font-weight: 600; border-radius: 0.5rem; padding: 0.6rem 1rem; transition: filter .15s; }
+    .btn-brand:hover { filter: brightness(1.1); }
+    .btn-ghost { background: #1a2740; border: 1px solid #2a3a5c; color: #cbd5e1; border-radius: 0.5rem; padding: 0.5rem 0.9rem; font-size: 0.8rem; transition: background .15s; }
+    .btn-ghost:hover { background: #223153; }
+    .field { width: 100%; background: #0d1526; border: 1px solid #243355; border-radius: 0.5rem; padding: 0.55rem 0.75rem; font-size: 0.85rem; color: #e2e8f0; }
+    .field:focus { outline: none; border-color: #10b981; box-shadow: 0 0 0 2px rgba(16,185,129,.25); }
+    .nav-item { display: flex; align-items: center; gap: 0.7rem; width: 100%; text-align: left; padding: 0.6rem 0.8rem; border-radius: 0.5rem; font-size: 0.85rem; color: #94a3b8; border: 1px solid transparent; transition: all .15s; }
+    .nav-item:hover { background: #1a2740; color: #e2e8f0; }
+    .nav-item.active { background: #10b981; color: #04120c; font-weight: 600; border-color: rgba(52,211,153,.4); }
+    .chip { background: #1a2740; border: 1px solid #2a3a5c; border-radius: 0.375rem; padding: 0.2rem 0.6rem; font-size: 0.7rem; color: #cbd5e1; }
+    .output-box { background: #0d1526; border: 1px dashed #2a3a5c; border-radius: 0.5rem; min-height: 10rem; padding: 0.9rem; font-size: 0.82rem; color: #cbd5e1; white-space: pre-wrap; }
+    .section { display: none; }
+    .section.active { display: block; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-thumb { background: #2a3a5c; border-radius: 4px; }
+  </style>
+</head>
+<body class="text-slate-200 min-h-screen">
+
+  <!-- Sidebar -->
+  <aside class="fixed inset-y-0 left-0 z-30 hidden lg:flex w-64 flex-col justify-between bg-[#0e1628] border-r border-[#1e2a45] p-4">
+    <div>
+      <div class="flex items-center gap-2.5">
+        <div class="grid size-9 place-items-center rounded-xl bg-emerald-500 text-[#04120c] font-bold text-sm">W</div>
+        <div class="leading-tight">
+          <p class="font-semibold text-[15px] text-slate-100">WorkWithMe.ai</p>
+          <p class="text-[10px] tracking-[0.16em] uppercase text-slate-500">Capaciti Enterprise Suite</p>
+        </div>
+      </div>
+      <nav class="mt-7 flex flex-col gap-1" id="nav-desktop"></nav>
+    </div>
+    <div class="rounded-lg border border-[#1e2a45] px-3 py-2.5 text-[11px] text-slate-400">
+      <p class="flex items-center gap-2 text-slate-300 font-medium"><i data-lucide="user" class="size-3.5 brand"></i>Lead: Thapelo Metsileng</p>
+      <p class="mt-1 text-slate-500">Role: Senior AI Engineer</p>
+    </div>
+  </aside>
+
+  <!-- Mobile top bar -->
+  <header class="lg:hidden sticky top-0 z-40 flex items-center justify-between bg-[#0e1628] border-b border-[#1e2a45] px-4 py-3">
+    <div class="flex items-center gap-2">
+      <div class="grid size-8 place-items-center rounded-lg bg-emerald-500 text-[#04120c] font-bold text-xs">W</div>
+      <span class="font-semibold text-sm">WorkWithMe.ai</span>
+    </div>
+    <button id="menu-btn" aria-label="Open navigation" class="grid size-9 place-items-center rounded-lg text-slate-300 hover:bg-[#1a2740]">
+      <i data-lucide="menu" class="size-5"></i>
+    </button>
+  </header>
+
+  <!-- Mobile drawer -->
+  <div id="drawer" class="fixed inset-0 z-50 hidden lg:hidden">
+    <button id="drawer-bg" aria-label="Close navigation" class="absolute inset-0 bg-black/60"></button>
+    <div class="absolute inset-y-0 left-0 w-72 bg-[#0e1628] border-r border-[#1e2a45] p-4">
+      <div class="flex items-center justify-between">
+        <span class="font-semibold text-sm">WorkWithMe.ai</span>
+        <button id="drawer-close" aria-label="Close navigation" class="grid size-9 place-items-center rounded-lg text-slate-300"><i data-lucide="x" class="size-5"></i></button>
+      </div>
+      <nav class="mt-6 flex flex-col gap-1" id="nav-mobile"></nav>
+    </div>
+  </div>
+
+  <main class="lg:pl-64 pb-24">
+    <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-10 lg:py-10">
+
+      <!-- ============ RESUME BUILDER ============ -->
+      <section id="sec-resume" class="section active">
+        <header class="mb-6 flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h1 class="text-2xl font-semibold sm:text-[28px] text-slate-100">AI Resume Builder &amp; ATS Scanner</h1>
+            <p class="text-sm text-slate-400 mt-1.5">Service-Style Architecture — edit your profile, preview live, and score it against a target job description.</p>
+          </div>
+          <button id="voice-btn" class="btn-ghost flex items-center gap-2"><i data-lucide="mic" class="size-4 brand"></i>Voice Command</button>
+        </header>
+
+        <div class="grid gap-4 lg:grid-cols-2">
+          <div class="panel p-4 sm:p-5 space-y-4">
+            <h2 class="text-sm font-semibold brand border-b border-[#1e2a45] pb-2">Candidate Profile Input</h2>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label class="text-xs text-slate-400 block mb-1">Full Name</label>
+                <input id="r-name" class="field" value="Thapelo Metsileng">
+              </div>
+              <div>
+                <label class="text-xs text-slate-400 block mb-1">Target Title</label>
+                <input id="r-title" class="field" value="Senior AI Engineer">
+              </div>
+            </div>
+            <div>
+              <label class="text-xs text-slate-400 block mb-1">Professional Summary</label>
+              <textarea id="r-summary" rows="4" class="field">Lead AI Engineer specializing in service-style AI workplace assistant architectures, prompt engineering, and LLM automation.</textarea>
+            </div>
+            <div>
+              <label class="text-xs text-slate-400 block mb-1">Key Competencies (Comma Separated)</label>
+              <input id="r-skills" class="field" value="Prompt Engineering, React, Python, Cloud Architecture, LLM Automation, Agile Management">
+            </div>
+            <div class="border-t border-[#1e2a45] pt-4 space-y-3">
+              <label class="text-xs text-slate-400 block">Target Job Description (for ATS Match)</label>
+              <textarea id="r-job" rows="4" class="field">Seeking a Senior AI Engineer proficient in React, Python, prompt engineering, cloud architecture and enterprise LLM automation.</textarea>
+              <button id="ats-btn" class="btn-brand w-full flex items-center justify-center gap-2"><i data-lucide="bar-chart-2" class="size-4"></i>Run ATS Keyword Optimization</button>
+            </div>
+            <div id="ats-score-card" class="hidden items-center justify-between rounded-lg border border-[#1e2a45] bg-emerald-500/10 p-4">
+              <div>
+                <p class="text-xs text-slate-400">ATS Job Alignment Score</p>
+                <p id="ats-verdict" class="text-sm font-semibold text-slate-100">High Keyword Match</p>
+              </div>
+              <span id="ats-score" class="brand text-2xl font-bold">94%</span>
+            </div>
+          </div>
+
+          <div class="panel flex flex-col justify-between p-6 sm:p-8">
+            <div class="space-y-6">
+              <div class="border-b border-[#1e2a45] pb-4">
+                <h2 id="p-name" class="text-xl font-bold tracking-wide text-slate-100">Thapelo Metsileng</h2>
+                <p id="p-title" class="brand text-sm font-medium">Senior AI Engineer</p>
+                <p class="text-xs text-slate-400 mt-1">thapelo@workwithme.ai | Johannesburg, South Africa</p>
+              </div>
+              <div>
+                <h3 class="text-[10.5px] font-semibold tracking-[0.16em] uppercase text-slate-500 mb-2">Executive Summary</h3>
+                <p id="p-summary" class="text-sm leading-relaxed text-slate-300"></p>
+              </div>
+              <div>
+                <h3 class="text-[10.5px] font-semibold tracking-[0.16em] uppercase text-slate-500 mb-2">Core Skills &amp; Expertise</h3>
+                <div id="p-skills" class="flex flex-wrap gap-1.5"></div>
+              </div>
+            </div>
+            <div class="mt-8 flex items-center justify-between border-t border-[#1e2a45] pt-5 text-xs text-slate-400">
+              <span class="flex items-center gap-1.5"><i data-lucide="sparkles" class="size-3.5 brand"></i>ATS Compliant Format</span>
+              <button onclick="window.print()" class="btn-ghost">Export Document</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ EMAIL ============ -->
+      <section id="sec-email" class="section">
+        <header class="mb-6">
+          <h1 class="text-2xl font-semibold sm:text-[28px] text-slate-100">Smart Email Generator</h1>
+          <p class="text-sm text-slate-400 mt-1.5">Draft professional emails in any tone from a few talking points.</p>
+        </header>
+        <div class="grid gap-4 lg:grid-cols-2">
+          <div class="panel p-4 sm:p-5 space-y-4">
+            <h2 class="text-sm font-semibold brand border-b border-[#1e2a45] pb-2">Smart Email Controls</h2>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label class="text-xs text-slate-400 block mb-1">Target Audience</label>
+                <select id="e-audience" class="field"><option>Client</option><option>Manager</option><option>Team Member</option></select>
+              </div>
+              <div>
+                <label class="text-xs text-slate-400 block mb-1">Tone</label>
+                <select id="e-tone" class="field"><option>Formal</option><option>Informal</option><option>Persuasive</option></select>
+              </div>
+            </div>
+            <div>
+              <label class="text-xs text-slate-400 block mb-1">Key Talking Points</label>
+              <textarea id="e-notes" rows="5" class="field" placeholder="e.g. project milestone reached, next sprint starts Monday, need sign-off on budget"></textarea>
+            </div>
+            <button id="email-btn" class="btn-brand w-full flex items-center justify-center gap-2"><i data-lucide="mail" class="size-4"></i>Draft Professional Email</button>
+          </div>
+          <div class="panel p-4 sm:p-5">
+            <div class="flex items-center justify-between border-b border-[#1e2a45] pb-2 mb-3">
+              <h2 class="text-sm font-semibold brand">Generated Response</h2>
+              <button class="btn-ghost copy-btn" data-target="e-output">Copy</button>
+            </div>
+            <div id="e-output" class="output-box" contenteditable="true">Click "Draft Professional Email" to process response...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ MEETING SUMMARIZER ============ -->
+      <section id="sec-notes" class="section">
+        <header class="mb-6">
+          <h1 class="text-2xl font-semibold sm:text-[28px] text-slate-100">Meeting Summarizer</h1>
+          <p class="text-sm text-slate-400 mt-1.5">Turn raw transcripts into decisions and action items.</p>
+        </header>
+        <div class="grid gap-4 lg:grid-cols-2">
+          <div class="panel p-4 sm:p-5 space-y-4">
+            <h2 class="text-sm font-semibold brand border-b border-[#1e2a45] pb-2">Transcript Input</h2>
+            <textarea id="m-input" rows="12" class="field" placeholder="Paste your meeting transcript or notes here..."></textarea>
+            <button id="meeting-btn" class="btn-brand w-full flex items-center justify-center gap-2"><i data-lucide="file-text" class="size-4"></i>Extract Insights &amp; Action Items</button>
+          </div>
+          <div class="panel p-4 sm:p-5">
+            <div class="flex items-center justify-between border-b border-[#1e2a45] pb-2 mb-3">
+              <h2 class="text-sm font-semibold brand">Structured Summary</h2>
+              <button class="btn-ghost copy-btn" data-target="m-output">Copy</button>
+            </div>
+            <div id="m-output" class="output-box" contenteditable="true">Awaiting transcript input...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ TASK PLANNER ============ -->
+      <section id="sec-planner" class="section">
+        <header class="mb-6">
+          <h1 class="text-2xl font-semibold sm:text-[28px] text-slate-100">AI Task Planner</h1>
+          <p class="text-sm text-slate-400 mt-1.5">Convert a rough to-do list into a prioritized, time-blocked schedule.</p>
+        </header>
+        <div class="grid gap-4 lg:grid-cols-2">
+          <div class="panel p-4 sm:p-5 space-y-4">
+            <h2 class="text-sm font-semibold brand border-b border-[#1e2a45] pb-2">Pending To-Do List</h2>
+            <textarea id="t-input" rows="12" class="field" placeholder="One task per line, e.g.&#10;Finalize security audit report&#10;Update API documentation&#10;Prepare sprint demo"></textarea>
+            <button id="planner-btn" class="btn-brand w-full flex items-center justify-center gap-2"><i data-lucide="calendar" class="size-4"></i>Build Time-Blocked Calendar</button>
+          </div>
+          <div class="panel p-4 sm:p-5">
+            <div class="flex items-center justify-between border-b border-[#1e2a45] pb-2 mb-3">
+              <h2 class="text-sm font-semibold brand">Prioritized Daily Schedule</h2>
+              <button class="btn-ghost copy-btn" data-target="t-output">Copy</button>
+            </div>
+            <div id="t-output" class="output-box" contenteditable="true">Submit tasks to generate structured schedule...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ RESEARCH ============ -->
+      <section id="sec-research" class="section">
+        <header class="mb-6">
+          <h1 class="text-2xl font-semibold sm:text-[28px] text-slate-100">Research Assistant</h1>
+          <p class="text-sm text-slate-400 mt-1.5">Synthesize long documents into an executive brief.</p>
+        </header>
+        <div class="grid gap-4 lg:grid-cols-2">
+          <div class="panel p-4 sm:p-5 space-y-4">
+            <h2 class="text-sm font-semibold brand border-b border-[#1e2a45] pb-2">Research Materials</h2>
+            <textarea id="rs-input" rows="12" class="field" placeholder="Paste articles, reports or papers here..."></textarea>
+            <button id="research-btn" class="btn-brand w-full flex items-center justify-center gap-2"><i data-lucide="book-open" class="size-4"></i>Synthesize Key Insights</button>
+          </div>
+          <div class="panel p-4 sm:p-5">
+            <div class="flex items-center justify-between border-b border-[#1e2a45] pb-2 mb-3">
+              <h2 class="text-sm font-semibold brand">Executive Brief</h2>
+              <button class="btn-ghost copy-btn" data-target="rs-output">Copy</button>
+            </div>
+            <div id="rs-output" class="output-box" contenteditable="true">Submit text materials on the left to extract core takeaways...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PROMPT ARCHITECTURE ============ -->
+      <section id="sec-prompts" class="section">
+        <header class="mb-6">
+          <h1 class="text-2xl font-semibold sm:text-[28px] text-slate-100">Prompt Architecture</h1>
+          <p class="text-sm text-slate-400 mt-1.5">Integrated Prompt Framework Specs — the embedded system rules governing all WorkWithMe.ai services.</p>
+        </header>
+        <div class="grid max-w-3xl gap-3" id="prompt-cards"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Safeguard footer -->
+  <footer class="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 bg-[#0e1628]/90 border-t border-[#1e2a45] px-4 py-2.5 text-[11px] backdrop-blur-md lg:left-64 lg:px-6">
+    <span class="flex items-center gap-2 text-slate-400">
+      <i data-lucide="shield-check" class="size-4 brand shrink-0"></i>
+      <span class="hidden sm:inline">Ethical Guardrail: Human-in-the-loop validation active. Local session privacy enforced.</span>
+      <span class="sm:hidden">Human review required</span>
+    </span>
+    <span class="text-slate-500">WorkWithMe.ai © 2026</span>
+  </footer>
+
+  <!-- Chat widget -->
+  <div class="fixed right-4 bottom-16 z-50 sm:right-6">
+    <div id="chat-panel" class="panel hidden h-[26rem] w-[min(20rem,calc(100vw-2rem))] flex-col overflow-hidden shadow-2xl">
+      <div class="flex items-center justify-between border-b border-[#1e2a45] px-3 py-2.5">
+        <div class="flex items-center gap-2">
+          <i data-lucide="message-square" class="size-4 brand"></i>
+          <span class="text-xs font-semibold">WorkWithMe Assistant</span>
+        </div>
+        <button id="chat-close" aria-label="Close assistant" class="text-slate-400 hover:text-slate-200"><i data-lucide="x" class="size-4"></i></button>
+      </div>
+      <div id="chat-log" class="flex-1 space-y-2.5 overflow-y-auto p-3 text-xs">
+        <div class="flex justify-start"><p class="max-w-[85%] rounded-lg bg-[#1a2740] border border-[#2a3a5c] px-2.5 py-2">Hello Thapelo! I am online. How can I assist you with your AI services today?</p></div>
+      </div>
+      <form id="chat-form" class="flex gap-2 border-t border-[#1e2a45] p-2">
+        <input id="chat-input" placeholder="Ask a question…" class="field !py-1.5 text-xs">
+        <button type="submit" aria-label="Send message" class="grid size-8 shrink-0 place-items-center rounded-md bg-emerald-500 text-[#04120c]"><i data-lucide="send" class="size-3.5"></i></button>
+      </form>
+    </div>
+    <button id="chat-fab" aria-label="Open assistant" class="grid size-12 place-items-center rounded-full bg-emerald-500 text-[#04120c] shadow-lg transition-transform hover:scale-105">
+      <i data-lucide="message-square" class="size-5"></i>
+    </button>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    lucide.createIcons();
+
+    /* ---------- Navigation ---------- */
+    const SECTIONS = [
+      { id: "resume",   label: "AI Resume Builder",    icon: "file-user" },
+      { id: "email",    label: "Smart Email Generator",icon: "mail" },
+      { id: "notes",    label: "Meeting Summarizer",   icon: "file-text" },
+      { id: "planner",  label: "AI Task Planner",      icon: "calendar" },
+      { id: "research", label: "Research Assistant",   icon: "search" },
+      { id: "prompts",  label: "Prompt Architecture",  icon: "shield-check" },
+    ];
+
+    function buildNav(el) {
+      el.innerHTML = SECTIONS.map(s =>
+        `<button class="nav-item" data-sec="${s.id}"><i data-lucide="${s.icon}" class="size-4 shrink-0"></i>${s.label}</button>`
+      ).join("");
+    }
+    buildNav(document.getElementById("nav-desktop"));
+    buildNav(document.getElementById("nav-mobile"));
+    lucide.createIcons();
+
+    function showSection(id) {
+      document.querySelectorAll(".section").forEach(s => s.classList.toggle("active", s.id === "sec-" + id));
+      document.querySelectorAll(".nav-item").forEach(b => b.classList.toggle("active", b.dataset.sec === id));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    document.querySelectorAll(".nav-item").forEach(b =>
+      b.addEventListener("click", () => { showSection(b.dataset.sec); closeDrawer(); })
+    );
+    showSection("resume");
+
+    const drawer = document.getElementById("drawer");
+    const closeDrawer = () => drawer.classList.add("hidden");
+    document.getElementById("menu-btn").onclick = () => drawer.classList.remove("hidden");
+    document.getElementById("drawer-close").onclick = closeDrawer;
+    document.getElementById("drawer-bg").onclick = closeDrawer;
+
+    /* ---------- Copy helper ---------- */
+    document.querySelectorAll(".copy-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const el = document.getElementById(btn.dataset.target);
+        navigator.clipboard.writeText(el.innerText);
+        btn.textContent = "Copied!";
+        setTimeout(() => (btn.textContent = "Copy"), 1600);
+      });
+    });
+
+    /* ---------- Resume: live preview ---------- */
+    const r = id => document.getElementById(id);
+    function renderPreview() {
+      r("p-name").textContent = r("r-name").value || "YOUR NAME";
+      r("p-title").textContent = r("r-title").value || "Job title";
+      r("p-summary").textContent = r("r-summary").value || "Summary text will appear here…";
+      r("p-skills").innerHTML = r("r-skills").value.split(",").filter(s => s.trim())
+        .map(s => `<span class="chip">${s.trim()}</span>`).join("");
+    }
+    ["r-name","r-title","r-summary","r-skills"].forEach(id => r(id).addEventListener("input", renderPreview));
+    renderPreview();
+
+    /* ---------- ATS scoring ---------- */
+    r("ats-btn").addEventListener("click", () => {
+      const skills = r("r-skills").value.toLowerCase().split(",").map(s => s.trim()).filter(Boolean);
+      const target = r("r-job").value.toLowerCase();
+      if (!target) return;
+      let matches = 0;
+      skills.forEach(s => { if (s && target.includes(s)) matches++; });
+      const score = skills.length ? Math.min(Math.round((matches / skills.length) * 100) + 40, 94) : 60;
+      const card = r("ats-score-card");
+      card.classList.remove("hidden"); card.classList.add("flex");
+      r("ats-score").textContent = score + "%";
+      r("ats-verdict").textContent = score >= 80 ? "High Keyword Match" : score >= 60 ? "Solid, needs tuning" : "Needs optimization";
+    });
+
+    /* ---------- Voice command (speech-to-text into focused field) ---------- */
+    r("voice-btn").addEventListener("click", () => {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) { alert("Voice input is not supported in this browser."); return; }
+      const rec = new SR();
+      rec.lang = "en-US";
+      r("voice-btn").innerHTML = '<i data-lucide="mic" class="size-4 text-red-400 animate-pulse"></i>Listening…';
+      rec.onresult = e => {
+        const text = e.results[0][0].transcript;
+        const active = document.activeElement;
+        if (active && (active.tagName === "INPUT" || active.tagName === "TEXTAREA")) active.value += (active.value ? " " : "") + text;
+        else r("r-summary").value += " " + text;
+        renderPreview();
+      };
+      rec.onend = () => { r("voice-btn").innerHTML = '<i data-lucide="mic" class="size-4 brand"></i>Voice Command'; lucide.createIcons(); };
+      rec.start();
+    });
+
+    /* ---------- Email generator ---------- */
+    r("email-btn").addEventListener("click", () => {
+      const aud = r("e-audience").value, tone = r("e-tone").value, notes = r("e-notes").value.trim();
+      const openings = {
+        Formal: "I hope this message finds you well.",
+        Informal: "Hope you're doing great!",
+        Persuasive: "I wanted to share something that could make a real difference for us."
+      };
+      const closings = {
+        Formal: "I look forward to your response at your earliest convenience.",
+        Informal: "Let me know what you think — chat soon!",
+        Persuasive: "I'd strongly recommend we act on this week — shall I set up a quick call?"
+      };
+      const greeting = aud === "Team Member" ? "Hi team," : aud === "Manager" ? "Hi," : "Dear valued client,";
+      r("e-output").textContent =
+`Subject: Update — ${notes ? notes.split(/[,\n]/)[0].trim().slice(0, 50) : "Workplace productivity next steps"}
+
+${greeting}
+
+${openings[tone]}
+
+I'm reaching out regarding the following key points:
+${notes ? notes.split(/[\n;]+/).filter(Boolean).map(p => "• " + p.trim()).join("\n") : "• Our recent discussions and upcoming milestones"}
+
+${closings[tone]}
+
+Best regards,
+Thapelo Metsileng
+Senior AI Engineer, WorkWithMe.ai`;
+    });
+
+    /* ---------- Meeting summarizer ---------- */
+    r("meeting-btn").addEventListener("click", () => {
+      const text = r("m-input").value.trim();
+      if (!text) return;
+      const sentences = text.split(/[.!?\n]+/).map(s => s.trim()).filter(s => s.length > 10);
+      const summary = sentences.slice(0, 2).join(". ") + (sentences.length ? "." : "");
+      const actions = sentences.filter(s => /\b(will|need to|must|should|action|follow up|assign|deadline|by (monday|tuesday|wednesday|thursday|friday|tomorrow|EOD))\b/i.test(s)).slice(0, 5);
+      r("m-output").textContent =
+`EXECUTIVE SUMMARY
+${summary || "The team reviewed project timelines, identified bottlenecks, and allocated resources for upcoming sprints."}
+
+KEY DECISIONS
+${sentences.length > 2 ? "• " + sentences[2] : "• Approved additional cloud budget for infrastructure."}
+${sentences.length > 3 ? "• " + sentences[3] : "• Shifted release date to Friday to allow thorough testing."}
+
+ACTION ITEMS
+${actions.length ? actions.map(a => "• " + a + "  [Owner: TBD | Deadline: TBD]").join("\n") : "• Finalize security audit report  [Owner: Alex | Deadline: Tomorrow, 5 PM]\n• Update API documentation  [Owner: Dev Team | Deadline: Thursday]"}
+
+Note: verify owners and deadlines against the original transcript before circulating.`;
+    });
+
+    /* ---------- Task planner ---------- */
+    r("planner-btn").addEventListener("click", () => {
+      const items = r("t-input").value.split("\n").map(t => t.trim()).filter(Boolean);
+      if (!items.length) return;
+      const slots = ["09:00 – 10:30", "11:00 – 12:30", "13:30 – 15:00", "15:30 – 17:00"];
+      const prios = ["URGENT", "HIGH", "MEDIUM", "NORMAL"];
+      r("t-output").textContent = "PRIORITIZED DAILY SCHEDULE\n" + "─".repeat(34) + "\n\n" +
+        items.map((t, i) =>
+          `${slots[i % slots.length]}  [${prios[Math.min(i, 3)]}]\n  ${t}`
+        ).join("\n\n") +
+        "\n\nTip: protect the URGENT block first; move NORMAL items if the day slips.";
+    });
+
+    /* ---------- Research assistant ---------- */
+    r("research-btn").addEventListener("click", () => {
+      const text = r("rs-input").value.trim();
+      if (!text) return;
+      const sentences = text.split(/[.!?\n]+/).map(s => s.trim()).filter(s => s.length > 20);
+      const insights = sentences.slice(0, 3);
+      r("rs-output").textContent =
+`EXECUTIVE BRIEF
+${"─".repeat(34)}
+
+CORE TAKEAWAY
+${insights[0] || "The material highlights trends in enterprise AI adoption, focusing on operational efficiency and risk management."}
+
+KEY INSIGHTS
+${insights.length > 1 ? insights.slice(1).map(i => "• " + i).join("\n") : "• Automated workflows reduce manual administrative overhead by up to 40%.\n• Human-in-the-loop validation prevents operational errors."}
+
+RECOMMENDATIONS
+Synthesize these findings into a lightweight internal brief, verify all figures against the primary source, and flag any claims that lack citations before sharing with stakeholders.`;
+    });
+
+    /* ---------- Prompt Architecture cards ---------- */
+    const SPECS = [
+      { n: "1", title: "ROLE SPECIFICATION", body: "Operates strictly under the authority of a Senior AI Engineer designing enterprise-grade solutions." },
+      { n: "2", title: "TASK SPECIFICATION", body: "Build and execute a multi-modal, service-style productivity assistant across 6 functional sub-modules." },
+      { n: "3", title: "CONTEXT SPECIFICATION", body: "Interacts with Thapelo Metsileng as the Lead Assistant, delivering production-grade outputs for Capaciti evaluation." },
+      { n: "4", title: "CONSTRAINTS & RESPONSIBLE AI", body: "Enforces human-in-the-loop review, local session privacy, and bias-reduced ATS evaluation rules." },
+    ];
+    r("prompt-cards").innerHTML = SPECS.map(s => `
+      <div class="panel p-5">
+        <h2 class="brand flex items-center gap-2 text-sm font-semibold"><i data-lucide="terminal" class="size-4"></i>${s.title}</h2>
+        <p class="mt-2 text-sm leading-relaxed text-slate-400">${s.body}</p>
+      </div>`).join("");
+    lucide.createIcons();
+
+    /* ---------- Chat widget ---------- */
+    const panel = r("chat-panel"), fab = r("chat-fab"), log = r("chat-log");
+    fab.addEventListener("click", () => { panel.classList.remove("hidden"); panel.classList.add("flex"); fab.classList.add("hidden"); r("chat-input").focus(); });
+    r("chat-close").addEventListener("click", () => { panel.classList.add("hidden"); panel.classList.remove("flex"); fab.classList.remove("hidden"); });
+
+    function bubble(text, mine) {
+      const wrap = document.createElement("div");
+      wrap.className = "flex " + (mine ? "justify-end" : "justify-start");
+      wrap.innerHTML = `<p class="max-w-[85%] rounded-lg px-2.5 py-2 ${mine ? "bg-emerald-500 text-[#04120c] font-medium" : "bg-[#1a2740] border border-[#2a3a5c]"}"></p>`;
+      wrap.firstChild.textContent = text;
+      log.appendChild(wrap);
+      log.scrollTo({ top: log.scrollHeight, behavior: "smooth" });
+    }
+
+    function botReply(q) {
+      const t = q.toLowerCase();
+      if (t.includes("email")) return "Head to the Smart Email Generator — pick your audience and tone, drop in talking points, and I'll draft it for you.";
+      if (t.includes("resume") || t.includes("ats") || t.includes("cv")) return "Open the AI Resume Builder, paste the target job description, and run the ATS Keyword Optimization to see your alignment score.";
+      if (t.includes("meeting") || t.includes("summary") || t.includes("notes")) return "Paste your transcript into the Meeting Summarizer and I'll extract the executive summary, decisions and action items.";
+      if (t.includes("task") || t.includes("plan") || t.includes("schedule")) return "Drop your to-do list (one task per line) into the AI Task Planner and I'll build a prioritized, time-blocked day.";
+      if (t.includes("research") || t.includes("brief")) return "Paste your source material into the Research Assistant and I'll synthesize an executive brief with key insights.";
+      if (t.includes("prompt") || t.includes("architecture")) return "The Prompt Architecture page documents the role, task, context and responsible-AI constraints governing every service in this suite.";
+      return "I can help across all six WorkWithMe.ai services — resume & ATS scoring, email drafting, meeting summaries, task planning, research briefs, and the prompt framework. Which one shall we start with?";
+    }
+
+    r("chat-form").addEventListener("submit", e => {
+      e.preventDefault();
+      const input = r("chat-input"), text = input.value.trim();
+      if (!text) return;
+      bubble(text, true);
+      input.value = "";
+      setTimeout(() => bubble(botReply(text), false), 500);
+    });
+  });
+  </script>
+</body>
+</html>
